@@ -219,7 +219,7 @@ function Login() {
         {/* Left Information Panel */}
         <div className="login-info-panel">
           <div className="info-brand">
-            <h2>DGSP / IGSP Conference Portal</h2>
+            <h2>DGsP / IGsP Conference Portal</h2>
             <p>Director General of Police / Inspector General of Police Conference Management System</p>
           </div>
           

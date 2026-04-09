@@ -22,7 +22,7 @@ function App() {
             flex: 1, 
             position: 'relative',
             background: 'linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%)',
-            marginLeft: '220px'
+            marginLeft: '260px'
           }}>
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />

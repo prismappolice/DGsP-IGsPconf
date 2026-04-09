@@ -244,23 +244,25 @@ function SummaryDashboard() {
         <div className="container-fluid p-2">
             <h5 className="m-0 text-dark fw-bold" style={{ fontSize: '1rem' }}>Recommendation Summary Dashboard</h5>
 
-          <div className="admin-stats-row mb-2">
-            <div className="admin-stat-box p-2" style={{ minHeight: 'auto' }}>
-              <div className="stat-title" style={{ fontSize: '0.7rem' }}>Total Assigned Users</div>
-              <div className="stat-val" style={{ fontSize: '1.2rem' }}>{overallStats.total}</div>
-            </div>
-            <div className="admin-stat-box border-success text-success p-2" style={{ minHeight: 'auto' }}>
-              <div className="stat-title" style={{ fontSize: '0.7rem' }}>Completed</div>
-              <div className="stat-val" style={{ fontSize: '1.2rem' }}>{overallStats.completed} <small style={{ fontSize: '0.65rem' }}>({overallStats.total > 0 ? ((overallStats.completed / overallStats.total) * 100).toFixed(1) : 0}%)</small></div>
-            </div>
-            <div className="admin-stat-box border-warning text-warning p-2" style={{ minHeight: 'auto' }}>
-              <div className="stat-title" style={{ fontSize: '0.7rem' }}>Processing</div>
-              <div className="stat-val" style={{ fontSize: '1.2rem' }}>{overallStats.processing} <small style={{ fontSize: '0.65rem' }}>({overallStats.total > 0 ? ((overallStats.processing / overallStats.total) * 100).toFixed(1) : 0}%)</small></div>
-            </div>
-            <div className="admin-stat-box border-danger text-danger p-2" style={{ minHeight: 'auto' }}>
-              <div className="stat-title" style={{ fontSize: '0.7rem' }}>Pending</div>
-              <div className="stat-val" style={{ fontSize: '1.2rem' }}>{overallStats.pending} <small style={{ fontSize: '0.65rem' }}>({overallStats.total > 0 ? ((overallStats.pending / overallStats.total) * 100).toFixed(1) : 0}%)</small></div>
-            </div>
+          <div className="table-responsive mb-2">
+            <table className="table table-bordered align-middle mb-0" style={{ minWidth: '600px', textAlign: 'center' }}>
+              <thead className="table-light">
+                <tr>
+                  <th>Total Assigned Users</th>
+                  <th className="text-success">Completed</th>
+                  <th className="text-warning">Processing</th>
+                  <th className="text-danger">Pending</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>{overallStats.total}</strong></td>
+                  <td className="text-success"><strong>{overallStats.completed}</strong><br /><small>({overallStats.total > 0 ? ((overallStats.completed / overallStats.total) * 100).toFixed(1) : 0}%)</small></td>
+                  <td className="text-warning"><strong>{overallStats.processing}</strong><br /><small>({overallStats.total > 0 ? ((overallStats.processing / overallStats.total) * 100).toFixed(1) : 0}%)</small></td>
+                  <td className="text-danger"><strong>{overallStats.pending}</strong><br /><small>({overallStats.total > 0 ? ((overallStats.pending / overallStats.total) * 100).toFixed(1) : 0}%)</small></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Summary Panel Toggle */}

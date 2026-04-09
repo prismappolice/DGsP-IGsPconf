@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Footer.css';
 
 function Footer() {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    const updateFooterSpace = () => {
+      if (!footerRef.current) return;
+      const h = Math.ceil(footerRef.current.offsetHeight || 72);
+      document.documentElement.style.setProperty('--footer-space', `${h}px`);
+    };
+
+    updateFooterSpace();
+
+    let observer;
+    if (typeof ResizeObserver !== 'undefined' && footerRef.current) {
+      observer = new ResizeObserver(updateFooterSpace);
+      observer.observe(footerRef.current);
+    }
+
+    window.addEventListener('resize', updateFooterSpace);
+    return () => {
+      window.removeEventListener('resize', updateFooterSpace);
+      if (observer) observer.disconnect();
+    };
+  }, []);
+
   return (
-    <footer className="portal-footer">
+    <footer ref={footerRef} className="portal-footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-section identity">

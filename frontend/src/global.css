@@ -1,5 +1,7 @@
 :root {
   --app-scale: 0.7;
+  --header-space: 120px;
+  --header-space-mobile: 104px;
   --footer-space: 72px;
 }
 

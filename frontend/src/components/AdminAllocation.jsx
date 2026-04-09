@@ -11,6 +11,9 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { getAssignedUsers } from '../utils/recommendationUtils';
 
+// Path to the template in public folder
+const MODEL_OFFICER_TEMPLATE_URL = "/templates/model-officer-template-recommendation-1.docx";
+
 const AdminAllocation = () => {
   // Get user role from localStorage (declare only once)
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -303,11 +306,20 @@ const AdminAllocation = () => {
   if (loading) return <div className="p-4 text-center">Loading...</div>;
 
   return (
+
     <div className="admin-allocation-wrapper">
       <main className="admin-allocation-main">
         <div className="container-fluid">
-          <div className="d-flex align-items-center mb-4 mt-2 p-3 bg-white shadow-sm rounded">
+          <div className="d-flex align-items-center mb-4 mt-2 p-3 bg-white shadow-sm rounded justify-content-between">
             <h4 className="m-0 text-dark fw-bold">Admin Dispatch Control</h4>
+            <a
+              href={MODEL_OFFICER_TEMPLATE_URL}
+              download
+              className="btn btn-success ms-3"
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              Download Model Officer Word Template
+            </a>
           </div>
 
           <div className="d-flex justify-content-between align-items-center mb-4">

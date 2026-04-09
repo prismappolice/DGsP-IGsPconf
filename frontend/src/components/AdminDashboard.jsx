@@ -5,7 +5,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { getAssignedUsers, ALL_STATES, ALL_UTS, ALL_MINISTRIES, MINISTRIES, ORGANIZATIONS } from '../utils/recommendationUtils';
+import { getAssignedUsers, ALL_STATES, ALL_UTS, ALL_MINISTRIES } from '../utils/recommendationUtils';
 import './AdminDashboard.css';
 
 function AdminDashboard() {
@@ -42,8 +42,8 @@ function AdminDashboard() {
   const entitiesBySelectedCategory = useMemo(() => {
     switch (selectedCategory) {
       case 'All States': return ALL_STATES;
-      case 'Ministries': return MINISTRIES;
-      case 'Organizations': return ORGANIZATIONS;
+      case 'Ministries': return ALL_MINISTRIES;
+      case 'Organizations': return ALL_MINISTRIES;
       case 'Union Territories': return ALL_UTS;
       default: return [];
     }
@@ -671,22 +671,7 @@ function AdminDashboard() {
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
               </select>
-              <div className="btn-group shadow-sm ms-2" style={{ borderRadius: '6px', overflow: 'hidden' }}>
-                <button
-                  className={`btn btn-sm ${viewMode === 'grid' ? 'btn-primary' : 'btn-outline-primary'} border-0 px-2 py-1`}
-                  style={{ fontSize: '0.75rem' }}
-                  onClick={() => setViewMode('grid')}
-                >
-                  📁 Grid
-                </button>
-                <button
-                  className={`btn btn-sm ${viewMode === 'table' ? 'btn-primary' : 'btn-outline-primary'} border-0 px-2 py-1`}
-                  style={{ fontSize: '0.75rem' }}
-                  onClick={() => setViewMode('table')}
-                >
-                  📋 Table
-                </button>
-              </div>
+              {/* Removed Grid/Table toggle buttons as requested */}
             </div>
 
 

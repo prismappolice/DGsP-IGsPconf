@@ -171,43 +171,45 @@ function Dashboard() {
     <div className="dashboard-content-wrapper">
       <main className="dashboard-main-content">
         <div className="container-fluid">
-          <div className="d-flex align-items-stretch justify-content-between mb-3 top-controls flex-nowrap w-100 gap-2">
-            <div className="detail-panel d-flex align-items-center justify-content-center text-truncate m-0" style={{ flex: '1 1 0', minWidth: 0, padding: '8px 16px' }}>
-              <div className="text-truncate text-center w-100">
+          <div className="d-flex align-items-stretch justify-content-between mb-3 top-controls w-100 gap-2">
+            <div className="detail-panel m-0">
+              <div className="detail-panel-content w-100">
                 {selectedRec ? (
                   <>
-                    <h5 className="mb-1 text-truncate fw-bold text-dark">Recommendation {selectedRec.recNo}</h5>
-                    <div className="detail-text text-truncate text-secondary mb-2">{selectedRec.recommendation}</div>
-                    <div className="small text-muted text-truncate d-flex justify-content-center gap-2">
+                    <h5 className="mb-1 fw-bold text-dark">Recommendation {selectedRec.recNo}</h5>
+                    <div className="detail-text text-secondary mb-2">{selectedRec.recommendation}</div>
+                    <div className="small text-muted detail-meta d-flex gap-2">
                       <span className="badge border" style={{ background: '#f8fafc', color: '#475569', fontSize: '0.8rem', padding: '6px 10px' }}>Actioned By: {selectedRec.actionedBy}</span>
                       <span className="badge" style={{ background: '#e0e7ff', color: '#3730a3', fontSize: '0.8rem', padding: '6px 10px' }}>Category: {formatCategory(selectedRec.category)}</span>
                     </div>
                   </>
                 ) : activeView === 'dispatch' ? (
-                  <h5 className="mb-0 text-truncate fw-bold text-dark" style={{ letterSpacing: '0.5px' }}>📦 Dispatch Control Panel</h5>
+                  <h5 className="mb-0 fw-bold text-dark" style={{ letterSpacing: '0.5px' }}>Dispatch Control Panel</h5>
                 ) : (
-                  <h5 className="mb-0 text-truncate fw-bold text-dark" style={{ letterSpacing: '0.5px' }}>✨ All Recommendations</h5>
+                  <h5 className="mb-0 fw-bold text-dark" style={{ letterSpacing: '0.5px' }}>All Recommendations</h5>
                 )}
               </div>
             </div>
 
             {activeView === 'recommendations' && (
               <>
-                <div className="d-flex align-items-center gap-2" style={{ flex: '0 0 auto' }}>
+                <div className="top-actions d-flex align-items-center gap-2" style={{ flex: '0 0 auto' }}>
                   {selectedRec && <button className="btn btn-secondary btn-sm h-100" onClick={() => setSelectedRec(null)}>Clear</button>}
                   <button className="btn btn-outline-danger btn-sm whitespace-nowrap h-100" onClick={handleLogout}>Logout</button>
                 </div>
               </>
             )}
             {activeView === 'dispatch' && !selectedRec && (
-              <div className="controls d-flex gap-2 align-items-center">
+              <div className="top-actions d-flex gap-2 align-items-center">
                 <button className="btn btn-outline-danger btn-sm whitespace-nowrap" onClick={handleLogout}>Logout</button>
               </div>
             )}
           </div>
 
           {selectedRec ? (
-            <RecommendationForm rec={selectedRec} onBack={() => setSelectedRec(null)} />
+            <section className="recommendation-stage">
+              <RecommendationForm rec={selectedRec} onBack={() => setSelectedRec(null)} />
+            </section>
           ) : activeView === 'dispatch' ? (
             <DispatchTable isAdmin={isAdmin} onOpenRec={(recId) => {
               const rec = recommendations.find(r => r.id === recId || r.recNo === recId);
@@ -217,11 +219,11 @@ function Dashboard() {
               }
             }} />
           ) : (
-            <div className="row">
+            <div className="row g-4">
               {visibleRecommendations.map(rec => {
                 const isExpanded = expandedRecs.has(rec.id);
                 return (
-                  <div key={rec.id} className="col-12 col-sm-6 col-lg-3 mb-4">
+                  <div key={rec.id} className="col-12 col-sm-6 col-lg-4 col-xxl-3">
                     <div className="rec-card card h-100 d-flex flex-column border-0">
                       <div className="card-body d-flex flex-column">
                         <div className="d-flex justify-content-between align-items-center mb-3">
@@ -579,7 +581,23 @@ function TableSection({ recNo, sectionIndex, fields }) {
 // Removed local constants, imported from recommendationUtils instead
 
 function RecommendationForm({ rec, onBack }) {
-  const [actionedBy, setActionedBy] = useState('');
+  // Get logged-in user from localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // Always use user's state/org/ministry/UT for Actioned By
+  const getUserDisplay = () => {
+    // Try common keys for state/org/ministry/UT
+    return (
+      user?.name ||
+      user?.state ||
+      user?.organization ||
+      user?.ministry ||
+      user?.unionTerritory ||
+      user?.username ||
+      user?.officerName ||
+      ''
+    );
+  };
+  const [actionedBy, setActionedBy] = useState(getUserDisplay());
   const [formData, setFormData] = useState(() => {
     try { return JSON.parse(localStorage.getItem(`rec_form_${rec.recNo}`)) || {}; } catch (e) { return {}; }
   });
@@ -602,10 +620,15 @@ function RecommendationForm({ rec, onBack }) {
   }, [rec.actionedBy]);
 
   useEffect(() => {
-    if (officerOptions.length > 0) {
-      setActionedBy(officerOptions[0]);
+    // Only set from officerOptions if no logged-in user info at all
+    if (!getUserDisplay()) {
+      if (officerOptions.length > 0) {
+        setActionedBy(officerOptions[0]);
+      }
+    } else {
+      setActionedBy(getUserDisplay());
     }
-  }, [officerOptions]);
+  }, [officerOptions, user]);
 
   const handleFieldChange = (sectionIdx, fieldName, value) => {
     setFormData(d => {
@@ -766,16 +789,16 @@ function RecommendationForm({ rec, onBack }) {
   ];
 
   return (
-    <div>
-      <div className="card mb-3">
+    <div className="recommendation-form-portrait">
+      <div className="card mb-3 form-header-card">
         <div className="card-body">
-          <h5>Recommendation {rec.recNo} - Implementation Report</h5>
+          <h5 className="form-title mb-0">Recommendation {rec.recNo} - Implementation Report</h5>
         </div>
       </div>
 
-      <div className="card mb-3">
+      <div className="card mb-3 form-meta-card">
         <div className="card-body">
-          <div className="row mb-2">
+          <div className="row mb-2 form-stack-row">
             <div className="col-md-4">
               <label className="form-label"><strong>Frequency</strong></label>
               <select className="form-select" value={frequency} onChange={e => { setFrequency(e.target.value); setPeriod(''); }}>
@@ -795,29 +818,27 @@ function RecommendationForm({ rec, onBack }) {
             </div>
             <div className="col-md-4">
               <label className="form-label"><strong>Actioned By / Officer</strong></label>
-              <select
-                className="form-select shadow-sm"
+              <input
+                className="form-control shadow-sm"
                 value={actionedBy}
-                onChange={e => setActionedBy(e.target.value)}
-              >
-                <option value="">-- Select Officer --</option>
-                {officerOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-              </select>
+                readOnly
+                style={{ background: '#f8fafc', color: '#475569' }}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="card mb-3">
+      <div className="card mb-3 form-docs-card">
         <div className="card-body">
-          <h6 className="mb-3 border-bottom pb-2 text-dark fw-bold">Required Documents</h6>
-          <div className="row align-items-start">
+          <h6 className="docs-title mb-3 border-bottom pb-2 text-dark fw-bold">Required Documents</h6>
+          <div className="row align-items-start docs-grid-row">
             {documentFields.map((field, idx) => {
               const fileKey = `doc_${idx}`;
               const isMultiple = field.multiple;
               const currentFiles = filesMeta[fileKey] || (isMultiple ? [] : null);
               return (
-                <div key={idx} className="col-md-4 mb-3">
+                <div key={idx} className="col-md-4 mb-3 doc-upload-item">
                   <label className="form-label mb-1" style={{ fontSize: '0.9rem' }}>
                     <strong>{isMultiple ? field.field.replace('Upload Photos', 'Upload Photos or Videos') : field.field} {field.field.toLowerCase().includes('signed') && <span className="text-danger">* (Must)</span>}</strong>
                   </label>
@@ -910,10 +931,9 @@ function RecommendationForm({ rec, onBack }) {
         </div>
       </div>
 
-      <div className="d-flex gap-2">
-        <button className="btn btn-success" onClick={saveForm}>💾 Save</button>
-        <button className="btn btn-info" onClick={() => downloadForm(rec.recNo)}>⬇️ Download</button>
-        <button className="btn btn-secondary" onClick={onBack}>Back</button>
+      <div className="d-flex gap-2 form-action-row">
+        <button className="btn btn-success btn-save-action" onClick={saveForm}>Save</button>
+        <button className="btn btn-secondary btn-back-action" onClick={onBack}>Back</button>
       </div>
     </div>
   );

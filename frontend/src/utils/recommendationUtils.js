@@ -23,24 +23,20 @@ export const COASTAL_UTS = [
 
 export const IMB_STATES = ['Arunachal Pradesh', 'Nagaland', 'Manipur', 'Mizoram'];
 
-export const MINISTRIES = [
+// Ministries and organizations for dropdown (as per user request)
+export const ALL_MINISTRIES = [
   'MEA', 'MHA', 'MOD', 'MoF', 'MORTH', 'MeitY',
   'Ministry of Corporate Affairs', 'Ministry of Education', 'Ministry of Finance',
   'Ministry of Health & Family Welfare', 'Ministry of I&B', 'Ministry of Labour',
   'Ministry of Law & Justice', 'Ministry of Ports, Shipping & Waterways',
   'Ministry of Social Justice & Empowerment', 'Ministry of Tourism',
   'Ministry of Tribal Affairs', 'Ministry of Women & Child Development',
-  'Ministry of Youth Affairs & Sports'
-];
-
-export const ORGANIZATIONS = [
+  'Ministry of Youth Affairs & Sports',
   'AAI', 'Assam Rifles', 'BCAS', 'BPR&D', 'BSF', 'CAPFs', 'CAPFs/CPOs',
   'CBDT', 'CBI', 'CISF', 'CPOs', 'DGs of CAPFs/CPOs', 'ED', 'FIU-IND',
   'FS CD & HG', 'I4C', 'IB', 'ITBP', 'NATGRID', 'NCB', 'NCRB', 'NDRF',
   'NFSU', 'NIA', 'NTRO', 'R&AW', 'SSB', 'SVPNPA'
 ];
-
-export const ALL_MINISTRIES = [...MINISTRIES, ...ORGANIZATIONS];
 
 export const expandOfficerToken = (token) => {
   if (!token) return null;
