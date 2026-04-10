@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const fileRoutes = require('./routes/fileRoutes');
+const path = require('path');
 const adminRoutes = require('./routes/adminRoutes');
 const multer = require('multer');
 const FileMeta = require('./models/FileMeta');
